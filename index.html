@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Evaluación · Redes LAN y Wi‑Fi Avanzado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #e0f0ff 0%, #f0e6ff 50%, #ffe0f0 100%);
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .eval-container {
+            max-width: 950px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px -12px rgba(0,20,40,0.25);
+            padding: 2rem 2rem 2.2rem;
+            border: 1px solid #b8cef0;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #1e3b5a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 4px solid #3a86ff;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.2rem;
+        }
+        h1 small {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4a627a;
+            margin-left: auto;
+        }
+        .info-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.8rem;
+            background: #e8eff9;
+            padding: 0.6rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+        }
+        .score-box {
+            background: #1e3a5f;
+            color: white;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .badge {
+            background: white;
+            color: #1e3a5f;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .questions-area {
+            margin: 1.5rem 0 1rem;
+        }
+        .question-card {
+            background: #ffffff;
+            border-radius: 1.2rem;
+            padding: 1.3rem 1.5rem;
+            margin-bottom: 1.4rem;
+            border-left: 6px solid #3a86ff;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
+        }
+        .question-header {
+            display: flex;
+            gap: 0.7rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            font-size: 1rem;
+            align-items: baseline;
+        }
+        .q-num {
+            background: #1e3a5f;
+            color: white;
+            border-radius: 30px;
+            padding: 0.15rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 0.5rem 0 0.8rem;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8fafe;
+            border: 1.5px solid #d7e2ee;
+            border-radius: 0.9rem;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .option:hover {
+            background: #eef4fc;
+            border-color: #7a9bcb;
+        }
+        .option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid #6f8db0;
+            border-radius: 50%;
+            cursor: pointer;
+            background: white;
+            flex-shrink: 0;
+        }
+        .option input[type="radio"]:checked {
+            background-color: #1e6f5c;
+            border-color: #1e6f5c;
+            box-shadow: inset 0 0 0 3px white;
+        }
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #1f2e3f;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        .feedback {
+            margin-top: 0.8rem;
+            padding: 0.7rem 1rem;
+            border-radius: 0.8rem;
+            font-size: 0.85rem;
+            background: #f7f9fc;
+            border-left: 5px solid #ccc;
+            color: #2a405c;
+        }
+        .feedback.correct {
+            border-left-color: #2b8c5e;
+            background: #e9f6ef;
+        }
+        .feedback.incorrect {
+            border-left-color: #c13b3b;
+            background: #ffeeee;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            justify-content: center;
+            margin: 2rem 0 0.5rem;
+        }
+        .btn {
+            border: none;
+            background: #dbe4ed;
+            color: #1e3a5f;
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #b8cade;
+        }
+        .btn-primary {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #102b44;
+            transform: scale(1.02);
+        }
+        .btn-success {
+            background: #2b8c5e;
+            color: white;
+            border: none;
+        }
+        .btn-success:hover {
+            background: #1f7049;
+        }
+        .footer-note {
+            margin-top: 1.8rem;
+            font-size: 0.8rem;
+            text-align: center;
+            color: #6e8898;
+        }
+        @media (max-width: 600px) {
+            body { padding: 0.8rem; }
+            .eval-container { padding: 1.2rem; }
+            h1 { font-size: 1.5rem; flex-wrap: wrap; }
+            .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="eval-container">
+    <h1>
+        📡 Evaluación · Redes y Wi‑Fi
+        <small>10 preguntas aleatorias</small>
+    </h1>
+    <div class="info-bar">
+        <span class="badge">🎲 40 preguntas en el banco</span>
+        <span class="score-box" id="scoreDisplay">0 / 10</span>
+    </div>
+
+    <div id="questionsArea" class="questions-area">
+        <!-- Las preguntas se generan dinámicamente -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="gradeBtn" class="btn btn-success">✅ Calificar evaluación</button>
+        <button id="newExamBtn" class="btn btn-primary">🔄 Nueva evaluación (siguiente alumno)</button>
+    </div>
+    <div class="footer-note">
+        ✔️ Cada acierto suma 1 punto (máximo 10). Las opciones se mezclan en cada intento.
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- BANCO COMPLETO DE 40 PREGUNTAS ----------
+        const bank = [];
+
+        // ===== BLOQUE A: Auditoría y Diseño de Redes LAN (20) =====
+        const blockA = [
+            {
+                text: "Durante una auditoría física, se detectan errores de CRC intermitentes en enlaces que pasan cerca de motores industriales. ¿Qué elemento de la Capa 1 falta o está mal implementado según la metodología 'Bottom-Up'?",
+                options: ["Paneles de parcheo de alta densidad.", "Organizadores de cables con separación estricta de alimentación.", "Estándar de etiquetado universal.", "Uso de cables UTP Categoría 6A en lugar de 5e."],
+                correct: "b",
+                explanation: "Los organizadores deben mantener una separación estricta entre cables de alimentación y datos para evitar interferencias electromagnéticas (EMI)."
+            },
+            {
+                text: "Una empresa sufre caídas frecuentes de red que tardan horas en resolverse debido a la dificultad de identificar qué cable conecta a qué oficina. ¿Qué componente del diagnóstico físico reduce directamente este MTTR?",
+                options: ["Certificación de cables de fábrica.", "Organizadores de cables verticales.", "Paneles de Parcheo (Patch Panels).", "Uso de transceptores SFP+."],
+                correct: "c",
+                explanation: "Los paneles de parcheo estructuran la red de forma que se reducen drásticamente los tiempos de resolución de incidentes (MTTR)."
+            },
+            {
+                text: "Se requiere conectar un IDF ubicado en un edificio anexo a 800 metros del MDF. ¿Cuál es la recomendación técnica óptima?",
+                options: ["Cobre UTP Cat 6A con repetidores cada 100 metros.", "Fibra óptica por su inmunidad total electromagnética y soporte de distancias kilométricas.", "Enlace inalámbrico de 80 MHz para maximizar el throughput.", "Módulos SFP de 1 Gbps sobre cable coaxial de alta calidad."],
+                correct: "b",
+                explanation: "La fibra óptica es el estándar para backbones MDF-IDF debido a su inmunidad al ruido y capacidad de cubrir varios kilómetros."
+            },
+            {
+                text: "Un técnico insiste en crimpar manualmente los patch cords del backbone para ahorrar costos. Como consultor, ¿cuál es el riesgo técnico principal que debe advertir?",
+                options: ["La pérdida de la garantía del switch Core.", "El riesgo de 'crosstalk' e impedancia variable que causa pérdida de paquetes.", "Que el estándar TIA/EIA no permite cables de menos de 1 metro.", "La incompatibilidad física con los módulos SFP+."],
+                correct: "b",
+                explanation: "El armado manual genera alto riesgo de crosstalk e impedancia variable, afectando la integridad del medio en redes de alta densidad."
+            },
+            {
+                text: "Al elegir un switch Core, el cliente pregunta por qué no usar un switch económico si ambos dicen '10 Gbps'. ¿Qué parámetro del datasheet revela el rendimiento real bajo tráfico masivo simultáneo?",
+                options: ["El número de ventiladores hot-swap.", "La capacidad total de conmutación (Switching Capacity).", "El soporte de PoE+ en todos los puertos.", "El estándar de etiquetado frontal."],
+                correct: "b",
+                explanation: "La 'Switching Capacity' revela si el switch puede soportar tráfico institucional masivo y simultáneo sin saturarse."
+            },
+            {
+                text: "Durante un pico de tráfico por una actualización de software masiva, los usuarios experimentan desconexiones. ¿Qué componente de hardware previene la pérdida de paquetes en estos escenarios?",
+                options: ["El Forwarding Rate medido en PPS.", "Los transceptores SFP+ de largo alcance.", "El Buffer de Memoria del switch.", "La segmentación en VLANs de administración."],
+                correct: "c",
+                explanation: "El buffer de memoria funciona como almacenamiento temporal crítico para prevenir la pérdida de paquetes durante picos repentinos de tráfico."
+            },
+            {
+                text: "Se necesita implementar segmentación lógica y enrutamiento entre departamentos (VLANs) a velocidad de hardware. ¿Qué tipo de dispositivo es indispensable en el Core?",
+                options: ["Switch Plug & Play (No Gestionable).", "Switch Capa 2 (Gestionable L2).", "Switch Capa 3 (Gestionable L3).", "Router de borde con NAT."],
+                correct: "c",
+                explanation: "Los switches Capa 3 son el 'cerebro del Core' y permiten el enrutamiento inter-VLAN a velocidad de hardware."
+            },
+            {
+                text: "Una red tiene 300 dispositivos en una misma subred (red plana) y sufre de lentitud generalizada. ¿Qué beneficio técnico aporta la creación de VLANs?",
+                options: ["Aumenta la potencia de la señal Wi-Fi a -65dBm.", "Reduce el dominio de broadcast, eliminando tormentas de red.", "Permite usar cables de cobre de más de 100 metros.", "Elimina la necesidad de usar un Router de Borde."],
+                correct: "b",
+                explanation: "Aislar VLANs reduce el dominio de broadcast, lo que previene tormentas de red y cuellos de botella."
+            },
+            {
+                text: "En 'El Viaje del Dato', ¿en qué punto exacto ocurre la conversión de la trama inalámbrica 802.11 a la trama cableada 802.3?",
+                options: ["En el Cliente (móvil).", "En el AP Wi-Fi.", "En el Switch de Acceso.", "En el Router de Borde."],
+                correct: "b",
+                explanation: "El AP Wi-Fi realiza la conversión de 802.11 a 802.3."
+            },
+            {
+                text: "Un usuario reporta que su conexión Wi-Fi es inestable a pesar de tener 'barras llenas'. La auditoría de espectro muestra una utilización del canal del 45%. ¿Cuál es el diagnóstico?",
+                options: ["La señal es demasiado débil (menor a -65dBm).", "Existe saturación por colisiones destructivas en el aire.", "El switch de acceso no soporta Capa 3.", "El canal de 20 MHz es demasiado estrecho."],
+                correct: "b",
+                explanation: "El umbral máximo recomendado de utilización es <30%; superarlo indica colisiones destructivas que degradan la experiencia."
+            },
+            {
+                text: "Para garantizar una itinerancia (roaming) fluida sin que el usuario note el salto entre APs, ¿cuál es el límite exacto de potencia de señal que debe recibir el cliente?",
+                options: ["-20 dBm.", "-65 dBm.", "-80 dBm.", "<30%."],
+                correct: "b",
+                explanation: "-65dBm es el límite exacto para garantizar roaming sin pérdida de paquetes."
+            },
+            {
+                text: "En un entorno de alta densidad (un aula con 50 dispositivos), ¿qué configuración de ancho de canal es la óptima para minimizar la interferencia co-canal?",
+                options: ["80 MHz.", "40 MHz.", "20 MHz.", "160 MHz."],
+                correct: "c",
+                explanation: "El ancho de canal de 20MHz es la configuración óptima para minimizar interferencias co-canal en alta densidad."
+            },
+            {
+                text: "Un gerente financiero rechaza un presupuesto de fibra óptica alegando que el cobre es más barato. ¿Cómo debe 'traducir' el consultor la necesidad de un backbone SFP+ de 10 Gbps?",
+                options: ["'Es necesario para cumplir con la norma ISO 27001'.", "'Es capacidad proyectada para 5 años de crecimiento sin reinversión'.", "'Permite alcanzar distancias de 100 metros'.", "'Reduce el MTTR de la red en un 50%'."],
+                correct: "b",
+                explanation: "La traducción estratégica del backbone de 10 Gbps es la garantía de crecimiento a largo plazo sin gastos adicionales futuros."
+            },
+            {
+                text: "El cliente se queja de que la red es lenta a las 10:00 AM. Técnicamente usted sabe que es por falta de capacidad de conmutación. ¿Cómo presenta esta solución en una propuesta profesional?",
+                options: ["'Compraremos switches de 256 Gbps'.", "'Garantía de rendimiento sin lentitud durante horas pico institucionales'.", "'Implementaremos protocolos VLAN/STP'.", "'Mejoraremos el diagnóstico de espectro RF'."],
+                correct: "b",
+                explanation: "El consultor comunica beneficios de negocio, como la ausencia de lentitud en horas pico, en lugar de solo cifras técnicas."
+            },
+            {
+                text: "¿Cuál es el orden lógico correcto de las fases de la metodología 'Bottom-Up' presentada?",
+                options: ["Selección de Hardware -> Auditoría Física -> Propuesta Profesional.", "Auditoría Física -> Selección de Hardware -> Implementación Lógica -> Diagnóstico Inalámbrico -> Propuesta Profesional.", "VLANs -> Cableado -> Wi-Fi -> ROI.", "Diagnóstico RF -> Enrutamiento -> Paneles de Parcheo -> Firma de contrato."],
+                correct: "b",
+                explanation: "La metodología comienza desde los cimientos (física) y sube hasta la propuesta de negocio."
+            },
+            {
+                text: "Se detecta que un servidor crítico es accesible por los alumnos. Según la arquitectura lógica, ¿dónde se debe aplicar el control estricto para evitar esto?",
+                options: ["En el AP Wi-Fi mediante contraseñas.", "En la VLAN 30 (Servidores) mediante ACLs.", "Cambiando el cable de cobre por fibra óptica.", "Etiquetando correctamente el puerto del servidor en el MDF."],
+                correct: "b",
+                explanation: "La VLAN de servidores debe tener un control estricto mediante ACLs."
+            },
+            {
+                text: "Al analizar un datasheet, el Forwarding Rate es bajo pero la Switching Capacity es alta. ¿Qué problema diagnóstico predice esto?",
+                options: ["El switch se calentará demasiado.", "El switch procesará bien paquetes grandes, pero sufrirá con flujos de muchos paquetes pequeños.", "La fibra óptica no podrá conectarse.", "No se podrán crear más de 10 VLANs."],
+                correct: "b",
+                explanation: "El Forwarding Rate (PPS) determina el throughput real bajo diferentes tamaños de paquetes; si es bajo, el switch se satura con muchos paquetes pequeños."
+            },
+            {
+                text: "En la arquitectura de una propuesta ganadora, ¿qué sección se encarga de mostrar la rentabilidad a 5 años?",
+                options: ["Resumen Ejecutivo.", "Diagnóstico Actual.", "Beneficios y ROI.", "Plan de Implementación."],
+                correct: "c",
+                explanation: "El punto 4 de la propuesta se enfoca específicamente en los beneficios y el Retorno de Inversión (ROI)."
+            },
+            {
+                text: "¿Cuál es la nomenclatura de etiquetado universal sugerida para trazabilidad instantánea en un MDF?",
+                options: ["Nombre del Técnico-Fecha-Número.", "MDF-Rack-Slot-Puerto.", "VLAN-IP-MAC.", "Entrada-Salida-Color."],
+                correct: "b",
+                explanation: "El estándar de etiquetado obligatorio sugerido es MDF-Rack-Slot-Puerto."
+            },
+            {
+                text: "¿Hacia qué tecnologías apunta 'El Siguiente Nivel' de evolución para un consultor de redes según la matriz de competencias?",
+                options: ["Mejores herramientas de crimpado manual.", "Redes Definidas por Software (SDN), automatización y normativas ISO 27001.", "Uso exclusivo de cables UTP Categoría 5e.", "Eliminación total de los switches Capa 3."],
+                correct: "b",
+                explanation: "La evolución continua se dirige hacia SDN, automatización y seguridad normativa (ISO 27001)."
+            }
+        ];
+
+        blockA.forEach((q, idx) => bank.push({ ...q, id: `a${idx}` }));
+
+        // ===== BLOQUE B: Redes Híbridas y Wi‑Fi Avanzado (20) =====
+        const blockB = [
+            {
+                text: "Un usuario con una acometida de fibra óptica de 1 Gbps reporta que su experiencia de navegación promedia los 80 Mbps. Tras descartar fallos en el ISP, ¿cuál es el diagnóstico técnico más probable según la arquitectura de 'El Último Salto'?",
+                options: ["Degradación de la señal por el uso de cables Cat5e en el tramo final.", "Colapso del medio inalámbrico compartido que actúa como cuello de botella.", "Saturación de la tabla de enrutamiento en el switch core central.", "Interferencia por refracción moderada en superficies de vidrio cercanas al router."],
+                correct: "b",
+                explanation: "El medio inalámbrico compartido suele degradar la experiencia a promedios de 50-100 Mbps, incluso con fibra de 1 Gbps."
+            },
+            {
+                text: "En una oficina con paredes de hormigón armado, un Access Point está separado de la estación de trabajo por dos muros. Si la señal de origen es de -30 dBm, ¿cuál sería la pérdida estimada y el impacto en el rendimiento?",
+                options: ["Pérdida de 12 dB; degradación leve de la tasa de transferencia.", "Pérdida de 20 dB; la señal se mantiene estable por encima del umbral crítico.", "Pérdida de 30-40 dB; destrucción casi total del rendimiento antes de llegar al dispositivo.", "Pérdida de 5 dB; el hormigón solo genera refracción, no atenuación crítica."],
+                correct: "c",
+                explanation: "El hormigón es barrera crítica (10-20 dB por pared); dos paredes acumulan 30-40 dB, destruyendo el rendimiento."
+            },
+            {
+                text: "¿Por qué el aire se considera un medio de transmisión 'half-duplex' en entornos urbanos densos?",
+                options: ["Porque permite la transmisión y recepción simultánea solo si se usa Wi-Fi 7.", "Debido a que los dispositivos deben 'escuchar' el medio y esperar si otro está transmitiendo para evitar colisiones.", "Porque la modulación OFDMA divide el canal en subcanales que solo funcionan en una dirección.", "Debido a que el espectro de 2.4 GHz está limitado a solo 3 canales no solapados."],
+                correct: "b",
+                explanation: "El aire es half-duplex porque los dispositivos compiten y deben esperar para evitar colisiones (escucha activa)."
+            },
+            {
+                text: "Al comparar Wi-Fi 5 (802.11ac) con Wi-Fi 6 (802.11ax) en un entorno con 50 dispositivos IoT, ¿cuál es la ventaja técnica clave para la estabilidad de la red?",
+                options: ["El incremento de la velocidad teórica bruta en la banda de 5 GHz.", "La capacidad de orquestación en entornos saturados mediante una mejor gestión de la densidad.", "La eliminación completa de la atenuación por materiales físicos.", "El uso exclusivo de la banda de 6 GHz para dispositivos de baja potencia."],
+                correct: "b",
+                explanation: "Wi-Fi 6 prioriza eficiencia y orquestación en alta densidad, no solo velocidad bruta como Wi-Fi 5."
+            },
+            {
+                text: "¿Cómo redefine OFDMA la transmisión de paquetes de datos en comparación con el Wi-Fi legado?",
+                options: ["Aumenta el tamaño del paquete individual para transportar más datos por viaje.", "Elimina el viaje individual por paquete, subdividiendo el canal para entregas simultáneas a múltiples dispositivos.", "Utiliza múltiples antenas para enviar el mismo paquete por diferentes rutas físicas.", "Cifra cada subcanal para evitar que los dispositivos 'escuchen' el medio compartido."],
+                correct: "b",
+                explanation: "OFDMA divide el espectro en subcanales para transmisiones paralelas sin colisiones."
+            },
+            {
+                text: "Se requiere conectar sensores IoT en un almacén con alta interferencia de microondas y dispositivos Bluetooth. ¿Qué banda y estrategia de gestión de espectro es la más adecuada?",
+                options: ["5 GHz, debido a que tiene una penetración media y mayor cantidad de canales.", "6 GHz, para aprovechar la saturación nula y la autopista vacía.", "2.4 GHz, a pesar de la saturación crítica, por su alta capacidad de penetración.", "Cableado Cat6a, ya que ninguna banda inalámbrica es viable en presencia de microondas."],
+                correct: "c",
+                explanation: "2.4 GHz tiene alta penetración, aunque saturada, es adecuada para sensores IoT."
+            },
+            {
+                text: "Un administrador de red instala repetidores inalámbricos para ampliar la cobertura. ¿Qué fenómeno técnico explicaría una caída del 50% en el ancho de banda disponible en los nodos extendidos?",
+                options: ["Atenuación exponencial al atravesar materiales de Durlock.", "Pérdida de capacidad por el uso del mismo canal de radio para recibir y transmitir simultáneamente.", "Incompatibilidad entre el estándar Wi-Fi 6 del router y el repetidor inalámbrico.", "Limitación física del cable de cobre que alimenta al repetidor."],
+                correct: "b",
+                explanation: "El repetidor usa el mismo canal para backhaul y servicio, cortando el ancho de banda a la mitad."
+            },
+            {
+                text: "En el 'Blueprint de la Red Híbrida', ¿cuál es la función crítica del Switch Core Central de 10 Gbps?",
+                options: ["Convertir la señal de radiofrecuencia en pulsos de luz para la fibra óptica.", "Distribuir datos de alta velocidad de forma cableada hacia los Access Points para mantener la integridad del backhaul.", "Actuar como un repetidor inalámbrico de alta potencia para evitar el uso de cables Cat6a.", "Gestionar exclusivamente la banda de 2.4 GHz para los dispositivos móviles de la red."],
+                correct: "b",
+                explanation: "El switch central distribuye datos cableados a los APs, sosteniendo la demanda sin degradación."
+            },
+            {
+                text: "¿Cuál es la principal restricción física de la banda de 6 GHz (Wi-Fi 6E/7) que debe considerarse en el diseño de una planta de oficinas?",
+                options: ["Su alta vulnerabilidad a interferencias de hornos de microondas.", "Su baja capacidad de penetración, requiriendo prácticamente línea de visión entre el AP y el dispositivo.", "La limitación de solo poseer 3 canales no solapados disponibles.", "La latencia ultra-alta generada por la modulación OFDMA activa."],
+                correct: "b",
+                explanation: "La banda de 6 GHz tiene baja penetración y requiere línea de visión."
+            },
+            {
+                text: "Si un Access Point debe irradiar 1 Gbps de forma inalámbrica, ¿cuál es el requisito indispensable de su infraestructura de soporte según los principios de simetría?",
+                options: ["Estar configurado exclusivamente en la banda de 2.4 GHz para maximizar el alcance.", "Estar alimentado por un backhaul cableado capaz de sostener esa demanda (ej. Cat6a).", "Utilizar materiales reflectantes como el vidrio para dispersar la señal.", "Configurar el intervalo de 'espera activa' al mínimo posible en el software."],
+                correct: "b",
+                explanation: "La velocidad inalámbrica nunca superará a su backhaul cableado; se requiere Cat6a o superior."
+            },
+            {
+                text: "¿Qué característica de Wi-Fi 7 permite reducir drásticamente la latencia en comparación con generaciones anteriores?",
+                options: ["El aumento de la pérdida por atenuación en materiales de madera.", "La implementación de Multi-Link Operation (MLO).", "La exclusividad de uso para dispositivos legados en la banda de 5 GHz.", "La eliminación de la necesidad de un Switch Core central en la red."],
+                correct: "b",
+                explanation: "Wi-Fi 7 introduce Multi-Link Operation (MLO) y latencia ultra-baja."
+            },
+            {
+                text: "En un diagnóstico de espectro, se detectan 30 redes Wi-Fi solapadas en un radio de 50 metros. ¿Qué paso del 'Colapso del Medio Compartido' provoca el aumento inmediato de la latencia?",
+                options: ["El paso de Competencia, donde los dispositivos negocian la velocidad de la fibra.", "El paso de Colisión, que ocurre cuando dos dispositivos transmiten exactamente al mismo tiempo.", "El paso de Espera Activa, donde los dispositivos deben 'escuchar' y aguardar antes de transmitir.", "El paso de Atenuación, donde la señal rebota en las paredes de hormigón armado."],
+                correct: "c",
+                explanation: "La latencia se multiplica en la Espera Activa, al tener que esperar que el medio esté libre."
+            },
+            {
+                text: "Se desea diseñar una red sin latencia para una laptop de alta gama utilizada para streaming 4K. Según el Blueprint, ¿cuál es la configuración óptima?",
+                options: ["Conexión a la banda de 2.4 GHz para asegurar estabilidad tras muros de carga.", "Uso de un repetidor inalámbrico en el mismo salón para potenciar la señal de 5 GHz.", "Conexión a un AP distribuido en la banda de 6 GHz con backhaul cableado Cat6a.", "Reducción de la velocidad del ISP a 100 Mbps para evitar el cuello de botella del aire."],
+                correct: "c",
+                explanation: "AP en banda de 6 GHz con backhaul cableado elimina congestión y latencia."
+            },
+            {
+                text: "¿Cuál es el impacto técnico de una pared de Pladur/Durlock en la señal Wi-Fi?",
+                options: ["Una pérdida de 10-20 dB que reduce la señal a la mitad.", "Una pérdida moderada de 4-6 dB, considerada una atenuación estándar.", "Una pérdida mínima de 2-4 dB similar a la de una puerta de madera.", "Un aumento de la latencia por refracción electromagnética severa."],
+                correct: "b",
+                explanation: "El Durlock/Pladur produce atenuación estándar de 4-6 dB."
+            },
+            {
+                text: "¿Por qué el marketing de 'routers más potentes' es a menudo un diagnóstico incorrecto para redes lentas?",
+                options: ["Porque los routers potentes no pueden emitir en la banda de 5 GHz.", "Porque el cuello de botella no es la falta de potencia o velocidad, sino la gestión deficiente del aire compartido.", "Porque la fibra óptica siempre compensa cualquier deficiencia del hardware local.", "Porque los routers modernos ya no utilizan la física de radiofrecuencia."],
+                correct: "b",
+                explanation: "El problema real es la gestión del aire compartido, no la potencia bruta del router."
+            },
+            {
+                text: "¿Qué ventaja ofrece la banda de 6 GHz en términos de canales no solapados respecto a la de 2.4 GHz?",
+                options: ["Ofrece 3 canales frente a los 14 de la banda de 2.4 GHz.", "Ofrece 14 nuevos canales de 160 MHz, eliminando la interferencia de dispositivos antiguos.", "Ambos tienen la misma cantidad de canales, pero la de 6 GHz es más rápida.", "La banda de 6 GHz no utiliza canales, sino una autopista de datos continua."],
+                correct: "b",
+                explanation: "6 GHz proporciona 14 canales de 160 MHz sin interferencia de dispositivos legados."
+            },
+            {
+                text: "En la arquitectura híbrida, ¿qué componente se encarga de que los APs emitan 'ondas limpias' sin saturación física?",
+                options: ["El router del ISP configurado en modo bridge.", "El cableado Cat6a que corre por techos hacia los cuartos.", "La banda de 2.4 GHz cuando se activa el modo de alta densidad.", "Los dispositivos IoT al entrar en modo de 'espera activa'."],
+                correct: "b",
+                explanation: "El backhaul cableado Cat6a alimentando APs en techo permite ondas limpias sin saturación."
+            },
+            {
+                text: "¿Qué sucede con la integridad de la conexión en un sistema con 'Simetría de Backhaul Cableado'?",
+                options: ["Se pierde el 50% de la capacidad debido a la conversión de señal.", "Se mantiene la integridad estructural de la conexión desde el core hasta el dispositivo final (100% de capacidad).", "El ancho de banda se limita a 50-100 Mbps para coincidir con la experiencia inalámbrica promedio.", "La latencia aumenta debido al procesamiento adicional del switch central."],
+                correct: "b",
+                explanation: "El backhaul cableado mantiene 100% de capacidad desde el core hasta el dispositivo final."
+            },
+            {
+                text: "¿Cuál es la 'verdadera métrica de éxito' en las redes modernas según el salto generacional?",
+                options: ["La velocidad teórica máxima alcanzada en condiciones de laboratorio.", "El número de antenas externas visibles en el router principal.", "La capacidad de orquestación en entornos saturados.", "La reducción del costo de instalación de fibra óptica hasta el hogar."],
+                correct: "c",
+                explanation: "La métrica clave es la capacidad de orquestación en entornos saturados, no solo velocidad bruta."
+            },
+            {
+                text: "Un dispositivo Wi-Fi 6 utiliza 'Target Wake Time' (TWT). ¿Cuál es el objetivo primordial de esta función?",
+                options: ["Aumentar la potencia de transmisión para atravesar paredes de hormigón.", "Reducir el consumo energético al programar cuándo el dispositivo debe despertar para transmitir.", "Forzar al dispositivo a conectarse siempre a la banda de 6 GHz.", "Eliminar por completo el uso de OFDMA para simplificar la conexión."],
+                correct: "b",
+                explanation: "TWT reduce el consumo energético programando los ciclos de activación del dispositivo."
+            }
+        ];
+
+        blockB.forEach((q, idx) => bank.push({ ...q, id: `b${idx}` }));
+
+        // ---------- CONFIGURACIÓN DE LA EVALUACIÓN ----------
+        const TOTAL_QUESTIONS = 10;
+        let currentQuestions = [];          // {text, shuffledOptions: [{letter, text}], correct, explanation}
+        let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        let examFinished = false;           // Para controlar si ya se calificó
+
+        const questionsArea = document.getElementById('questionsArea');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const gradeBtn = document.getElementById('gradeBtn');
+        const newExamBtn = document.getElementById('newExamBtn');
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function generateExam() {
+            // Seleccionar 10 preguntas aleatorias del banco
+            const indices = [...Array(bank.length).keys()];
+            const selectedIndices = shuffleArray(indices).slice(0, TOTAL_QUESTIONS);
+            currentQuestions = selectedIndices.map(idx => {
+                const q = bank[idx];
+                const letters = 'abcd'.slice(0, q.options.length);
+                // Construir array de opciones con su letra original
+                const optsWithLetter = letters.map((l, i) => ({ letter: l, text: q.options[i] }));
+                // Mezclar opciones
+                const shuffled = shuffleArray([...optsWithLetter]);
+                // Encontrar la nueva letra de la respuesta correcta
+                const correctObj = shuffled.find(o => o.letter === q.correct);
+                return {
+                    text: q.text,
+                    shuffledOptions: shuffled,
+                    correct: correctObj ? correctObj.letter : q.correct, // Por seguridad
+                    explanation: q.explanation
+                };
+            });
+            userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+            examFinished = false;
+            scoreDisplay.textContent = '0 / 10';
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            if (!currentQuestions.length) return;
+            let html = '';
+            currentQuestions.forEach((q, i) => {
+                html += `
+                <div class="question-card" id="card-${i}">
+                    <div class="question-header">
+                        <span class="q-num">Pregunta ${i+1}</span>
+                        <span>${q.text}</span>
+                    </div>
+                    <div class="options">
+                        ${q.shuffledOptions.map(opt => `
+                            <div class="option" data-qidx="${i}" data-letter="${opt.letter}">
+                                <input type="radio" name="q${i}" value="${opt.letter}" id="q${i}_${opt.letter}" ${userAnswers[i] === opt.letter ? 'checked' : ''}>
+                                <label for="q${i}_${opt.letter}"><strong>${opt.letter.toUpperCase()})</strong> ${opt.text}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="fb-${i}" style="display: none;"></div>
+                </div>`;
+            });
+            questionsArea.innerHTML = html;
+
+            // Eventos para seleccionar respuesta
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                const options = document.querySelectorAll(`.option[data-qidx="${i}"]`);
+                options.forEach(div => {
+                    const radio = div.querySelector('input[type="radio"]');
+                    radio.addEventListener('change', (e) => {
+                        if (e.target.checked) {
+                            userAnswers[i] = e.target.value;
+                            if (examFinished) {
+                                // Si ya se calificó, permitir cambiar pero no afecta la nota
+                                // Podríamos recalcular, pero mejor exigir nueva evaluación
+                            }
+                            const fb = document.getElementById(`fb-${i}`);
+                            if (fb) {
+                                fb.style.display = 'none';
+                                fb.className = 'feedback';
+                            }
+                        }
+                    });
+                    // Hacer clic en toda la opción
+                    div.addEventListener('click', (e) => {
+                        if (e.target.tagName !== 'INPUT') {
+                            const input = div.querySelector('input');
+                            if (input && !input.checked) {
+                                input.checked = true;
+                                // Disparar evento change
+                                input.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+        function gradeExam() {
+            if (!currentQuestions.length) return;
+            let correctCount = 0;
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                const q = currentQuestions[i];
+                const ans = userAnswers[i];
+                const fbDiv = document.getElementById(`fb-${i}`);
+                if (!fbDiv) continue;
+
+                const isCorrect = (ans && ans === q.correct);
+                if (isCorrect) correctCount++;
+
+                const correctLetter = q.correct.toUpperCase();
+                const correctText = q.shuffledOptions.find(o => o.letter === q.correct)?.text || '';
+
+                fbDiv.style.display = 'block';
+                if (!ans) {
+                    fbDiv.innerHTML = `⚠️ Sin responder. La respuesta correcta es ${correctLetter}) ${correctText}.<br>${q.explanation}`;
+                    fbDiv.className = 'feedback incorrect';
+                } else if (isCorrect) {
+                    fbDiv.innerHTML = `✅ <strong>¡Correcto!</strong> ${q.explanation}`;
+                    fbDiv.className = 'feedback correct';
+                } else {
+                    fbDiv.innerHTML = `❌ <strong>Incorrecto.</strong> La respuesta correcta es ${correctLetter}) ${correctText}.<br>${q.explanation}`;
+                    fbDiv.className = 'feedback incorrect';
+                }
+            }
+            scoreDisplay.textContent = `${correctCount} / 10`;
+            examFinished = true;
+        }
+
+        function newExamForNextStudent() {
+            generateExam();
+        }
+
+        gradeBtn.addEventListener('click', () => {
+            if (examFinished) {
+                if (confirm('Esta evaluación ya fue calificada. ¿Desea iniciar una nueva evaluación para el siguiente alumno?')) {
+                    newExamForNextStudent();
+                }
+            } else {
+                gradeExam();
+            }
+        });
+
+        newExamBtn.addEventListener('click', () => {
+            newExamForNextStudent();
+        });
+
+        // Iniciar primera evaluación
+        generateExam();
+    })();
+</script>
+</body>
+</html>
